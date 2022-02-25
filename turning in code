@@ -1,0 +1,50 @@
+from __future__ import division
+import nltk, re, pprint
+from urllib import request
+from bs4 import BeautifulSoup
+from nltk.probability import FreqDist
+#
+# Assign URL of the web page to be processed
+#
+url = "https://edition.cnn.com/2020/10/06/politics/donald-trump-coronavirus-white-house-biden/index.html"
+#
+# Read the HTML from the URL
+#
+html = request.urlopen(url).read()
+#
+# Get text (clean html) using BeautifulSoup get_text method
+#
+raw = BeautifulSoup(html).get_text()
+#
+# Tokenize or get words
+#
+tokens = nltk.word_tokenize(raw)
+#
+# HTML Words
+#
+htmlwords = ['https', 'http', 'display', 'button', 'hover',
+             'color', 'background', 'height', 'none', 'target',
+             'WebPage', 'reload', 'fieldset', 'padding', 'input',
+            'select', 'textarea', 'html', 'form', 'cursor',
+            'overflow', 'format', 'italic', 'normal', 'truetype',
+            'before', 'name', 'label', 'float', 'title', 'arial', 'type',
+            'block', 'audio', 'inline', 'canvas', 'margin', 'serif', 'menu',
+            'woff', 'content', 'fixed', 'media', 'position', 'relative', 'hidden',
+            'width', 'clear', 'body', 'standard', 'expandable', 'helvetica',
+            'fullwidth', 'embed', 'expandfull', 'fullstandardwidth', 'left', 'middle',
+            'iframe', 'rgba', 'selected', 'scroll', 'opacity',
+            'center', 'false', 'right']
+#
+# Get words meeting criteria such as words having only alphabets,
+# words of length > 4 and words not in htmlwords
+#
+words = [w for w in tokens if w.isalpha() and len(w) > 4 and w.lower() not in htmlwords]
+#
+# Create NLTK Text instance to use NLTK APIs
+#
+text = nltk.Text(words)
+#
+# Create Frequency distribution to see frequency of words
+#
+freqdist = FreqDist(text)
+freqdist.plot(30)
